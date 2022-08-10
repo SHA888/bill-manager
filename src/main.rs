@@ -27,6 +27,21 @@
 // * A vector is the easiest way to store the bills at stage 1, but a
 //   hashmap will be easier to work with at stages 2 and 3.
 
+use std::io;
+
+fn get_input() -> Option<String> {
+  let mut buffer = String::new();
+  while io::stdin().read_line(&mut buffer).is_err() {
+    println!("Please enter your data again");
+  }
+  let input = buffer.trim().to_owned();
+  if &input == "" {
+    None
+  } else {
+    Some(input)
+  }
+}
+
 fn main() {
 
 }
