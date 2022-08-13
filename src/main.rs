@@ -31,28 +31,26 @@ use std::io;
 
 #[derive(Debug, Clone)]
 pub struct Bill {
-  name: String,
-  amount: f64,
+    name: String,
+    amount: f64,
 }
 
 pub struct Bills {
-  inner: Vec<Bill>
+    inner: Vec<Bill>,
 }
 
 impl Bills {
-  fn new() -> Self {
-    Self {
-      inner: vec![]
+    fn new() -> Self {
+        Self { inner: vec![] }
     }
-  }
 
-  fn add(&mut self, bill: Bill) {
-    self.inner.push(bill);
-  }
+    fn add(&mut self, bill: Bill) {
+        self.inner.push(bill);
+    }
 
-  fn get_all(&self) -> Vec<&Bill> {
-    self.inner.iter().collect()
-  }
+    fn get_all(&self) -> Vec<&Bill> {
+        self.inner.iter().collect()
+    }
 }
 
 fn get_input() -> Option<String> {
@@ -68,6 +66,45 @@ fn get_input() -> Option<String> {
     }
 }
 
+fn get_bill_amount() -> Option<f64> {
+    println!("Amount:");
+    loop {
+      let input = match get_input() {
+        Some(input) => input,
+        None => return None,
+      };
+      if &input == "" {
+        return None;
+      }
+      let parsed_input: Result<f64, _> = input.parse();
+      match parsed_input {
+        Ok(amount) => return Some(amount),
+        Err(_) => println!("Please enter a number"),
+      }
+    }
+}
+
+mod menu {
+    use crate::{get_input, Bill, Bills};
+
+    pub fn add_bill(bills: &mut Bills) {
+        println!("Bill name:");
+        let name = match get_input() {
+            Some(input) => input,
+            None => return,
+        };
+
+        let amount = match get_input() {
+            Some(amount) => amount,
+            None => return,
+        };
+
+        let bill = Bill { name, amount };
+        bills.add(bill);
+        println!("Bill added");
+    }
+}
+
 enum MainMenu {
     AddBill,
     ViewBill,
@@ -75,19 +112,19 @@ enum MainMenu {
 
 impl MainMenu {
     fn from_str(input: &str) -> Option<MainMenu> {
-      match input {
-        "1" => Some(MainMenu::AddBill),
-        "2" => Some(MainMenu::ViewBill),
-        _ => None,
-      }
+        match input {
+            "1" => Some(MainMenu::AddBill),
+            "2" => Some(MainMenu::ViewBill),
+            _ => None,
+        }
     }
     fn show() {
-      println!("");
-      println!(" == Bill Manager == ");
-      println!("1. Add Bill");
-      println!("2. View Bill");
-      println!("");
-      println!("Enter selection: ");
+        println!("");
+        println!(" == Bill Manager == ");
+        println!("1. Add Bill");
+        println!("2. View Bill");
+        println!("");
+        println!("Enter selection: ");
     }
 }
 
@@ -97,9 +134,9 @@ fn main() {
         MainMenu::show();
         let input = get_input().expect("no data entered");
         match MainMenu::from_str(input.as_str()) {
-          Some(MainMenu::AddBill) => (),
-          Some(MainMenu::ViewBill) => (),
-          None => return,
+            Some(MainMenu::AddBill) => (),
+            Some(MainMenu::ViewBill) => (),
+            None => return,
         }
         // Make a choice, based on the input
     }
