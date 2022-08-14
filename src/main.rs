@@ -85,7 +85,7 @@ fn get_bill_amount() -> Option<f64> {
 }
 
 mod menu {
-    use crate::{get_input, Bill, Bills};
+    use crate::{get_input, get_bill_amount, Bill, Bills};
 
     pub fn add_bill(bills: &mut Bills) {
         println!("Bill name:");
@@ -94,7 +94,7 @@ mod menu {
             None => return,
         };
 
-        let amount = match get_input() {
+        let amount = match get_bill_amount() {
             Some(amount) => amount,
             None => return,
         };
@@ -102,6 +102,12 @@ mod menu {
         let bill = Bill { name, amount };
         bills.add(bill);
         println!("Bill added");
+    }
+
+    pub fn view_bills(bills: &Bills) {
+      for bill in bills.get_all() {
+        println!("{:?}", bill);
+      }
     }
 }
 
@@ -130,12 +136,14 @@ impl MainMenu {
 
 fn main() {
     // Create bill structure
+    let mut bills = Bills::new();
+
     loop {
         MainMenu::show();
         let input = get_input().expect("no data entered");
         match MainMenu::from_str(input.as_str()) {
-            Some(MainMenu::AddBill) => (),
-            Some(MainMenu::ViewBill) => (),
+            Some(MainMenu::AddBill) => menu::add_bill(&mut bills),
+            Some(MainMenu::ViewBill) => menu::view_bills(&bills),
             None => return,
         }
         // Make a choice, based on the input
